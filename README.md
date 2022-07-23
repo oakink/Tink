@@ -173,6 +173,6 @@ The fitted hand pose will be stored in `DeepSDF_OakInk/data/sdf/phone/contact/C5
 <img src="imgs/refine.gif" alt="refine" style="zoom:50%;" />
 
 
-**We also provide all the transferred hand poses of the mini dataset. You can download the [files](https://drive.google.com/file/d/1URjWi36O3vQrdN4C2NXvz53OmLILGLUf/view?usp=sharing), unzip them and replace the original `phone` directory.**
+**We also provide all the transferred hand poses of the mini dataset. You can download the [files](https://drive.google.com/file/d/1j4ej4i0XaHaq7MgYt2sOH-nqqom4LPcm/view?usp=sharing), unzip them and replace the original `phone` directory.**
 
 ![all_refine](imgs/all_refine.gif)
