@@ -1,0 +1,3 @@
+[submodule "DeepSDF_OakInk"]
+	path = DeepSDF_OakInk
+	url = https://github.com/KailinLi/DeepSDF_OakInk.git
