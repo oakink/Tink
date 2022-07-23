@@ -170,8 +170,9 @@ CUDA_VISIBLE_DEVICES=0 python tink/manip_gen.py \
 
 The fitted hand pose will be stored in `DeepSDF_OakInk/data/sdf/phone/contact/C52001/demo_e54965ec08/o52105` directory.
 
-<video src="imgs/refine.mp4"></video>
+<img src="imgs/refine.gif" alt="refine" style="zoom:50%;" />
+
 
 **We also provide all the transferred hand poses of the mini dataset. You can download the [files](https://drive.google.com/file/d/1URjWi36O3vQrdN4C2NXvz53OmLILGLUf/view?usp=sharing), unzip them and replace the original `phone` directory.**
 
-<video src="imgs/all_refine.mp4"></video>
+![all_refine](imgs/all_refine.gif)
