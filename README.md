@@ -1,5 +1,43 @@
-# Tink
 
+  <p align="center">
+    <img src="imgs/oakink_logo.png"" alt="Logo" width="20%">
+  </p>
+
+<h1 align="center"> Tink </h1>
+
+  <p align="center">
+    <strong>CVPR, 2022</strong>
+    <br />
+    <a href="https://lixiny.github.io"><strong>Lixin Yang*</strong></a>
+    ·
+    <a href="https://kailinli.top"><strong>Kailin Li*</strong></a>
+    ·
+    <a href=""><strong>Xinyu Zhan*</strong></a>
+    ·
+    <a href=""><strong>Fei Wu</strong></a>
+    ·
+    <a href="https://anran-xu.github.io"><strong>Anran Xu</strong></a>
+    .
+    <a href="https://liuliu66.github.io"><strong>Liu Liu</strong></a>
+    ·
+    <a href="https://mvig.sjtu.edu.cn"><strong>Cewu Lu</strong></a>
+    <br />
+    \star = equal contribution
+  </p>
+
+  <p align="center">
+  <a href='https://openaccess.thecvf.com/content/CVPR2022/html/Yang_OakInk_A_Large-Scale_Knowledge_Repository_for_Understanding_Hand-Object_Interaction_CVPR_2022_paper.html'>
+      <img src='https://img.shields.io/badge/Paper-PDF-yellow?style=flat&logo=googlescholar&logoColor=blue' alt='Paper PDF'>
+    </a>
+    <a href='https://arxiv.org/abs/2203.15709' style='padding-left: 0.5rem;'>
+      <img src='https://img.shields.io/badge/ArXiv-PDF-green?style=flat&logo=arXiv&logoColor=green' alt='ArXiv PDF'>
+    </a>
+    <a href='https://oakink.net' style='padding-left: 0.5rem;'>
+      <img src='https://img.shields.io/badge/Project-Page-blue?style=flat&logo=Google%20chrome&logoColor=blue' alt='Project Page'>
+    <a href='https://www.youtube.com/watch?v=vNTdeXlLdU8' style='padding-left: 0.5rem;'>
+      <img src='https://img.shields.io/badge/Youtube-Video-red?style=flat&logo=youtube&logoColor=red' alt='Youtube Video'>
+    </a>
+  </p>
 This is the official implementation of ***Tink***.
 
 ***Tink*** is a novel method that **T**ransfers the **In**teraction **K**nowledge among objects and is one of the core contributions in [***OakInk***](https://oakink.net).
@@ -23,7 +61,7 @@ This is the official implementation of ***Tink***.
 In this repo, we provide a *mini dataset* to demonstrate the pipeline of ***Tink***.
 
 * Download the `assets` [files](https://drive.google.com/file/d/1RFdhkxKoa1C1sRcy8c1JeQ9p2mrs0EU6/view?usp=sharing).
-* Download `mano` following the official instructions. And put the `mano_v1_2` under the `assets` directory.
+* Download `mano` following the [official instructions](https://mano.is.tue.mpg.de). And put the `mano_v1_2` under the `assets` directory.
 * Download the *mini dataset* from this [link](https://drive.google.com/file/d/166gHVftHq_whBZWBkHuHI7738hp38tUe/view?usp=sharing). And unzip them under the `DeepSDF_OakInk` directory.
 
 Your directory should look like this:
@@ -171,7 +209,6 @@ CUDA_VISIBLE_DEVICES=0 python tink/manip_gen.py \
 The fitted hand pose will be stored in `DeepSDF_OakInk/data/sdf/phone/contact/C52001/demo_e54965ec08/o52105` directory.
 
 <img src="imgs/refine.gif" alt="refine" style="zoom:50%;" />
-
 
 **We also provide all the transferred hand poses of the mini dataset. You can download the [files](https://drive.google.com/file/d/1j4ej4i0XaHaq7MgYt2sOH-nqqom4LPcm/view?usp=sharing), unzip them and replace the original `phone` directory.**
 
