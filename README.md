@@ -1,103 +1,177 @@
 # Tink
 
-This is the official implementation of Tink.
+This is the official implementation of ***Tink***.
 
+***Tink*** is a novel method that **T**ransfers the **In**teraction **K**nowledge among objects and is one of the core contributions in [***OakInk***](https://oakink.net).
 
+![tink](imgs/tink.png)
 
+## Installation
 
+* First, clone this repo:
 
+  ```shell
+  git clone https://github.com/KailinLi/Tink.git
+  cd Tink
+  git submodule init && git submodule update
+  ```
 
+* Second, to set up the environment, please follow the instructions in [***OakInk* oikit**](https://github.com/lixiny/OakInk) to install the environment with Conda (***stand-alone***).
 
+## Download
 
+In this repo, we provide a *mini dataset* to demonstrate the pipeline of ***Tink***.
 
+* Download the `assets` [files](https://drive.google.com/file/d/1RFdhkxKoa1C1sRcy8c1JeQ9p2mrs0EU6/view?usp=sharing).
+* Download `mano` following the official instructions. And put the `mano_v1_2` under the `assets` directory.
+* Download the *mini dataset* from this [link](https://drive.google.com/file/d/166gHVftHq_whBZWBkHuHI7738hp38tUe/view?usp=sharing). And unzip them under the `DeepSDF_OakInk` directory.
 
-## Step 6. 编译DeepSDF
+Your directory should look like this:
 
-参照 `DeepSDF/README.md`，注意，此处相对于原版DeepSDF有改动，一定要重新编译。
+```shell
+Tink
+├── assets
+│   ├── anchor
+    ├── hand_palm_full.txt
+    ├── yodaobject_cat.json
+│   └── mano_v1_2
+├── DeepSDF_OakInk
+│   ├── data
+│   │   ├── meta
+│   │   ├── OakInkObjects
+│   │   ├── OakInkVirtualObjects
+│   │   ├── raw_grasp
+│   │   └── sdf
+│   │       └── phone
+```
 
-## Step 7. 预处理SDF
+## DeepSDF
+
+In this section, we demonstrate how to preprocess the object meshes and train a category-level DeepSDF.
+
+***If you are not interested in training DeepSDF, feel free to skip this section.***
+
+### 1. Compile the C++ code
+
+Please follow the official instructions of [DeepSDF](https://github.com/facebookresearch/DeepSDF).
+
+You will get two executables in the `DeepSDF_OakInk/bin` directory. (We modified some of the original source code in DeepSDF, so please make sure to compile these scripts from the scratch.)
+
+### 2. Preprocess the object meshes
 
 ```shell
 export MESA_GL_VERSION_OVERRIDE=3.3
 export PANGOLIN_WINDOW_URI=headless://
 
-cd DeepSDF
-
-python preprocess_data.py --data_dir data/sdf/xxx --skip --threads 16
-
-# 在data/sdf/xxx中，sdf文件存储在 SdfSamples下，物体重新align+rescale模型存放在 SdfSamples_resize下，rescale.pkl为该类物体统一scale的系数
+cd DeepSDF_OakInk
+python preprocess_data.py --data_dir data/sdf/phone --threads 4
 ```
 
-## Step 8. 训练模型
+After finishing the script, you can find the SDF files in `DeepSDF_OakInk/data/sdf/phone/SdfSamples` directory.
+
+### 3. Train the network
 
 ```shell
-cd DeepSDF
-
-python train_deep_sdf.py -e data/sdf/xxx
-
-# 网络模型存放在 data/sdf/xxx/network下
+CUDA_VISIBLE_DEVICES=0 python train_deep_sdf.py -e data/sdf/phone
 ```
 
-## Step 9. 导出 LatentCode
+### 4. Dump the latent codes and reconstructed meshes
 
 ```shell
-cd DeepSDF
-
-python reconstruct_train.py -e data/sdf/xxx  # --mesh_include
-
-# latentCode放在 data/sdf/xxx/Reconstructions/Codes下面
+CUDA_VISIBLE_DEVICES=0 python reconstruct_train.py -e data/sdf/phone  --mesh_include
 ```
 
----
+You can find the reconstructed meshes under the `DeepSDF_OakInk/data/sdf/phone/Reconstructions/Meshes`.
 
----
+## Shape Interpolation
 
----
-
-## Step 10. 插值
+***If you skip the above section, we provide a pre-trained DeepSDF network. Please download the [files](https://drive.google.com/file/d/1g9TsQo0VPAafQPgNgDHVE3Py5XZMEh0B/view?usp=sharing), unzip them and replace the original `phone` directory:***
 
 ```shell
-# 在yoda_object文件夹下
-python gen_interpolate.py --all -d ./DeepSDF/data/sdf/xxx
-
-# 插值的mesh在 DeepSDF/data/sdf/xxx/interpolate下
+sdf
+├── phone
+│   ├── network
+│   │   ├── ModelParameters
+│   │   │   └── latest.pth
+│   │   └── LatentCodes
+│   ├── Reconstructions
+│   │   ├── Codes
+│   │   │   ├── C52001.pth
+│   │   │   ├── ...
+│   │   └── Meshes
+│   │       ├── C52001.ply
+│   │       ├── ...
+│   ├── rescale.pkl
+│   ├── SdfSamples
+│   │   ├── C52001.npz
+│   │   ├── ...
+│   ├── SdfSamples_resize
+│   ├── specs.json
+│   └── split.json
 ```
 
-## Step 11. 计算contact info
+Now, go to the `Tink` directory, and run the following script to generate the interpolations:
 
 ```shell
-# obj_id：grasp交互的物体id；tag: 批处理tag 详见yoda_hand；pose_path：手的pose shape tsl 文件路径
-python yoda_object/cal_contact_info.py -d ./DeepSDF/data/sdf/xxx -s {obj_id} -t {tag} -p {pose_path}
+cd Tink
 
-# contact_info.pkl存储在 ./DeepSDF/data/sdf/xxx/contact/{obj_id}/{tag}_~~~~下。同时保存了物体坐标系下的hand pose参数和原pose路径
+# you can generate all of the interpolations:
+python tink/gen_interpolate.py --all -d ./DeepSDF_OakInk/data/sdf/phone
+
+# or just interpolate between two objects (from C52001 to o52105):
+python tink/gen_interpolate.py -d ./DeepSDF_OakInk/data/sdf/phone -s C52001 -t o52105
 ```
 
-## Step 12. transfer contact info
+You can find the interpolations in `DeepSDF_OakInk/data/sdf/phone/interpolate` directory.
+
+## Calculate Contact Info
+
+We calculate the contact region of `C52001`:
 
 ```shell
-# obj_id：grasp交互的物体id；tag: 批处理tag 详见yoda_hand；target_obj_id：迁移目标物体的id
-python yoda_object/info_transform.py -d ./DeepSDF/data/sdf/xxx -p ./DeepSDF/data/sdf/xxx/contact/{obj_id}/{tag}_~~~~ -s {obj_id} -t {target_obj_id}
-
-# contact_info.pkl存储在 ./DeepSDF/data/sdf/xxx/contact/{obj_id}/{tag}_~~~~/{target_obj_id}/下，同时保存了每一步迁移的contact info
+python tink/cal_contact_info.py \
+	-d ./DeepSDF_OakInk/data/sdf/phone \
+	-s C52001 \
+	--tag demo \
+	-p DeepSDF_OakInk/data/raw_grasp/demo/C52001_0001_0000/2021-10-09-15-13-39/dom.pkl \
+	--vis
 ```
 
-## Step 13. fitting
+The `contact_info.pkl` is stored in `DeepSDF_OakInk/data/sdf/phone/contact/C52001/demo_e54965ec08`. `e54965ec08` is the hash code of the hand parameters.
+
+<img src="imgs/contact.png" alt="contact" style="zoom:50%;" />
+
+## Contact Mapping
+
+We take the virtual object `o52105` as an example.
+
+To transfer the contact information from `C52001` to `o52105`:
 
 ```shell
-# obj_id：grasp交互的物体id；tag: 批处理tag 详见yoda_hand；target_obj_id：迁移目标物体的id
-# fix_tsl：将手的初值，从原contact region的质心，平移到新contact region的质心。实验表明会收敛更快且更稳定
-CUDA_VISIBLE_DEVICES=0 python yoda_object/manip_gen.py -d ./DeepSDF/data/sdf/xxx -p ./DeepSDF/data/sdf/xxx/contact/{obj_id}/{tag}_~~~~ -s {obj_id} -t {target_obj_id} # --fix_tsl
-
-# hand_param.pkl存储在 ./DeepSDF/data/sdf/xxx/contact/{obj_id}/{tag}_~~~~/{target_obj_id}/下，hand pose在物体坐标系中
+python tink/info_transform.py \
+	-d ./DeepSDF_OakInk/data/sdf/phone \
+	-s C52001 \
+	-t o52105 \
+	-p DeepSDF_OakInk/data/sdf/phone/contact/C52001/demo_e54965ec08
 ```
 
-## Step 14. 批处理脚本
+You can find the transfered contact info in `DeepSDF_OakInk/data/sdf/phone/contact/C52001/demo_e54965ec08/o52105`.
 
-批处理 **Step 11-13**：
+## Pose Refinement
 
 ```shell
-# 详情参考代码逻辑
-for i in {0..k - 1}; do python yoda_object/pipeline.py -d DeepSDF/data/sdf/xxx --tag {tag} --stage sss --wid $i --workers k --filter_dir {path to dom_filter}
+CUDA_VISIBLE_DEVICES=0 python tink/manip_gen.py \
+												-d ./DeepSDF_OakInk/data/sdf/phone \
+												-s C52001 \
+												-t o52105 \
+												-p DeepSDF_OakInk/data/sdf/phone/contact/C52001/demo_e54965ec08 \
+												--vis
 ```
 
+The fitted hand pose will be stored in `DeepSDF_OakInk/data/sdf/phone/contact/C52001/demo_e54965ec08/o52105` directory.
 
+<video src="/Users/likailin/Downloads/Tink/imgs/refine.mp4"></video>
+
+**We also provide all the transferred hand poses of the mini dataset. You can download the [files](https://drive.google.com/file/d/1URjWi36O3vQrdN4C2NXvz53OmLILGLUf/view?usp=sharing), unzip them and replace the original `phone` directory.**
+
+<video src="/Users/likailin/Downloads/Tink/imgs/all_refine.mp4"></video>
