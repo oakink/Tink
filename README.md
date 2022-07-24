@@ -3,7 +3,7 @@
     <img src="imgs/oakink_logo.png"" alt="Logo" width="20%">
   </p>
 
-<h1 align="center"> Tink </h1>
+<h1 align="center"> Tink</h1>
 
   <p align="center">
     <strong>CVPR, 2022</strong>
@@ -38,9 +38,11 @@
       <img src='https://img.shields.io/badge/Youtube-Video-red?style=flat&logo=youtube&logoColor=red' alt='Youtube Video'>
     </a>
   </p>
-This is the official implementation of ***Tink***.
+  
+This repo contains the official implementation of ***Tink*** -- one of the core contributions in the CVPR2022 paper: [***OakInk***](https://oakink.net).
 
-***Tink*** is a novel method that **T**ransfers the **In**teraction **K**nowledge among objects and is one of the core contributions in [***OakInk***](https://oakink.net).
+***Tink*** is a novel method that **T**ransfers the hand's  **IN**teraction **K**nowledge among objects.
+
 
 ![tink](imgs/tink.png)
 
