@@ -38,6 +38,8 @@
       <img src='https://img.shields.io/badge/Youtube-Video-red?style=flat&logo=youtube&logoColor=red' alt='Youtube Video'>
     </a>
   </p>
+
+
 This is the official implementation of ***Tink***.
 
 ***Tink*** is a novel method that **T**ransfers the **In**teraction **K**nowledge among objects and is one of the core contributions in [***OakInk***](https://oakink.net).
@@ -70,8 +72,7 @@ Your directory should look like this:
 Tink
 ├── assets
 │   ├── anchor
-    ├── hand_palm_full.txt
-    ├── yodaobject_cat.json
+│   ├── hand_palm_full.txt
 │   └── mano_v1_2
 ├── DeepSDF_OakInk
 │   ├── data
@@ -151,7 +152,7 @@ sdf
 Now, go to the `Tink` directory, and run the following script to generate the interpolations:
 
 ```shell
-cd Tink
+cd ..
 
 # you can generate all of the interpolations:
 python tink/gen_interpolate.py --all -d ./DeepSDF_OakInk/data/sdf/phone
@@ -198,7 +199,7 @@ You can find the transfered contact info in `DeepSDF_OakInk/data/sdf/phone/conta
 ## Pose Refinement
 
 ```shell
-CUDA_VISIBLE_DEVICES=0 python tink/manip_gen.py \
+CUDA_VISIBLE_DEVICES=0 python tink/pose_refine.py \
 	-d ./DeepSDF_OakInk/data/sdf/phone \
 	-s C52001 \
 	-t o52105 \
@@ -206,7 +207,7 @@ CUDA_VISIBLE_DEVICES=0 python tink/manip_gen.py \
 	--vis
 ```
 
-The fitted hand pose will be stored in `DeepSDF_OakInk/data/sdf/phone/contact/C52001/demo_e54965ec08/o52105` directory.
+The fitted hand pose will be stored in `DeepSDF_OakInk/data/sdf/phone/contact/C52001/demo_e54965ec08/o52105` directory. (When visualizing the hand pose, you might need to chick the 'x' on the window status bar to start fitting.)
 
 <img src="imgs/refine.gif" alt="refine" style="zoom:50%;" />
 

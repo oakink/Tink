@@ -1,3 +1,6 @@
+# ----------------------------------------------
+# Written by Kailin Li (kailinli@sjtu.edu.cn)
+# ----------------------------------------------
 import json
 import os
 import sys

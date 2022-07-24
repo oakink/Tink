@@ -289,63 +289,6 @@ class GeOptimizer:
 
         # ====== runtime viz
         self.runtime_vis = runtime_vis
-        if self.runtime_vis is not None:
-
-            # ? register keyboard
-            self.b_axis = self.u_axis = self.l_axis = None
-
-            self.manually_pose = self.opt_val["hand_pose_var_val"][1:].detach()
-
-            def change_pose_finger(idx, inv=False):
-                if self.l_axis is None:
-                    return
-                self.manually_pose[idx] = self.opt_val["hand_pose_var_val"][1 + idx].detach()
-
-                quat_rot = angle_axis_to_quaternion(
-                    (self.l_axis.squeeze()[idx] * np.pi / 12 * (1 if inv else -1))[None]
-                )  # [1, 4]
-                self.manually_pose[idx] = quaternion_mul(quat_rot, self.manually_pose[idx][None]).squeeze()
-
-            def manually_pose_thumb(vis):
-                change_pose_finger(12)
-
-            def manually_pose_index(vis):
-                change_pose_finger(0)
-
-            def manually_pose_middle(vis):
-                change_pose_finger(3)
-
-            def manually_pose_ring(vis):
-                change_pose_finger(9)
-
-            def manually_pose_pinky(vis):
-                change_pose_finger(6)
-
-            def manually_pose_thumb_inv(vis):
-                change_pose_finger(12, inv=True)
-
-            def manually_pose_index_inv(vis):
-                change_pose_finger(0, inv=True)
-
-            def manually_pose_middle_inv(vis):
-                change_pose_finger(3, inv=True)
-
-            def manually_pose_ring_inv(vis):
-                change_pose_finger(9, inv=True)
-
-            def manually_pose_pinky_inv(vis):
-                change_pose_finger(6, inv=True)
-
-            self.runtime_vis["window"].register_key_callback(ord("1"), manually_pose_thumb)
-            self.runtime_vis["window"].register_key_callback(ord("2"), manually_pose_index)
-            self.runtime_vis["window"].register_key_callback(ord("3"), manually_pose_middle)
-            self.runtime_vis["window"].register_key_callback(ord("4"), manually_pose_ring)
-            self.runtime_vis["window"].register_key_callback(ord("5"), manually_pose_pinky)
-            self.runtime_vis["window"].register_key_callback(ord("6"), manually_pose_thumb_inv)
-            self.runtime_vis["window"].register_key_callback(ord("7"), manually_pose_index_inv)
-            self.runtime_vis["window"].register_key_callback(ord("8"), manually_pose_middle_inv)
-            self.runtime_vis["window"].register_key_callback(ord("9"), manually_pose_ring_inv)
-            self.runtime_vis["window"].register_key_callback(ord("0"), manually_pose_pinky_inv)
 
         # ====== verbose
         if self.verbose:
@@ -488,7 +431,6 @@ class GeOptimizer:
             edge_loss = HandLoss.edge_len_loss(
                 rebuild_verts_squeezed, const_val["hand_edges"], const_val["static_edge_len"]
             )
-            self.b_axis, self.u_axis, self.l_axis = b_axis.detach(), u_axis.detach(), l_axis.detach()
 
         else:
             quat_norm_loss = torch.Tensor([0.0]).to(self.device)
@@ -802,8 +744,6 @@ def init_runtime_viz(
         parameters = ctl.convert_to_pinhole_camera_parameters()
         parameters.extrinsic = cam_extr
         ctl.convert_from_pinhole_camera_parameters(parameters)
-        # ro = runtime_vis["window"].get_render_option()
-        # ro.load_from_json("./ro.json")
 
 
     return runtime_vis
