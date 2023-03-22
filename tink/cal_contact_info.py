@@ -12,10 +12,10 @@ import numpy as np
 import open3d as o3d
 import torch
 import trimesh
-from liegroups import SO3
 from manotorch.manolayer import ManoLayer, MANOOutput
 from manotorch.utils.anchorutils import anchor_load_driver, recover_anchor
 from manotorch.utils.quatutils import quaternion_to_angle_axis
+from oikit.common import aa_to_rotmat, rotmat_to_aa
 from termcolor import cprint
 from trimesh.base import Trimesh
 
@@ -120,9 +120,13 @@ def get_hand_parameter(pose_path):
     hand_pose = quaternion_to_angle_axis(hand_pose.reshape(16, 4)).reshape(48).numpy()
     obj_rot, obj_tsl = pose["obj_transf"][:3, :3].numpy(), pose["obj_transf"][:3, 3].T.numpy()
 
-    hand_gr = SO3.exp(hand_pose[:3]).as_matrix()
+    # hand_gr = SO3.exp(hand_pose[:3]).as_matrix()
+    # hand_gr = obj_rot.T @ hand_gr
+    # hand_gr = SO3.log(SO3.from_matrix(hand_gr, normalize=True))
+    hand_gr = aa_to_rotmat(hand_pose[:3])
     hand_gr = obj_rot.T @ hand_gr
-    hand_gr = SO3.log(SO3.from_matrix(hand_gr, normalize=True))
+    hand_gr = rotmat_to_aa(hand_gr)
+
     hand_pose[:3] = hand_gr
     hand_tsl = obj_rot.T @ (hand_tsl - obj_tsl)
 

@@ -1,4 +1,3 @@
-
   <p align="center">
     <img src="imgs/oakink_logo.png"" alt="Logo" width="20%">
   </p>
@@ -41,14 +40,13 @@
   
 This repo contains the official implementation of ***Tink*** -- one of the core contributions in the CVPR2022 paper: [***OakInk***](https://oakink.net).
 
-***Tink*** is a novel method that **T**ransfers the hand's  **IN**teraction **K**nowledge among objects.
-
+**_Tink_** is a novel method that **T**ransfers the hand's **IN**teraction **K**nowledge among objects.
 
 ![tink](imgs/tink.png)
 
 ## Installation
 
-* First, clone this repo:
+- First, clone this repo:
 
   ```shell
   git clone https://github.com/KailinLi/Tink.git
@@ -56,15 +54,20 @@ This repo contains the official implementation of ***Tink*** -- one of the core 
   git submodule init && git submodule update
   ```
 
-* Second, to set up the environment, please follow the instructions in [***OakInk* oikit**](https://github.com/lixiny/OakInk) to install the environment with Conda (***stand-alone***).
+- Second, to set up the environment, follow the instruction: **_stand-alone_** in [**OakInk**](https://github.com/lixiny/OakInk) to install the environment with conda.
+- Third, inside the `OakInk` directory, install the **oikit** as package:
+  ```shell
+  $ cd OakInk
+  $ pip install .
+  ```
 
 ## Download
 
-In this repo, we provide a *mini dataset* to demonstrate the pipeline of ***Tink***.
+In this repo, we provide a _mini dataset_ to demonstrate the pipeline of **_Tink_**.
 
-* Download the `assets` [files](https://drive.google.com/file/d/1RFdhkxKoa1C1sRcy8c1JeQ9p2mrs0EU6/view?usp=sharing).
-* Download `mano` following the [official instructions](https://mano.is.tue.mpg.de). And put the `mano_v1_2` under the `assets` directory.
-* Download the *mini dataset* from this [link](https://drive.google.com/file/d/166gHVftHq_whBZWBkHuHI7738hp38tUe/view?usp=sharing). And unzip them under the `DeepSDF_OakInk` directory.
+- Download the `assets` [files](https://drive.google.com/file/d/1RFdhkxKoa1C1sRcy8c1JeQ9p2mrs0EU6/view?usp=sharing).
+- Download `mano` following the [official instructions](https://mano.is.tue.mpg.de). And put the `mano_v1_2` under the `assets` directory.
+- Download the _mini dataset_ from this [link](https://drive.google.com/file/d/166gHVftHq_whBZWBkHuHI7738hp38tUe/view?usp=sharing). And unzip them under the `DeepSDF_OakInk` directory.
 
 Your directory should look like this:
 
@@ -88,7 +91,7 @@ Tink
 
 In this section, we demonstrate how to preprocess the object meshes and train a category-level DeepSDF.
 
-***If you are not interested in training DeepSDF, feel free to skip this section.***
+**_If you are not interested in training DeepSDF, feel free to skip this section._**
 
 ### 1. Compile the C++ code
 
@@ -124,7 +127,7 @@ You can find the reconstructed meshes under the `DeepSDF_OakInk/data/sdf/phone/R
 
 ## Shape Interpolation
 
-***If you skip the above section, we provide a pre-trained DeepSDF network. Please download the [files](https://drive.google.com/file/d/1g9TsQo0VPAafQPgNgDHVE3Py5XZMEh0B/view?usp=sharing), unzip them and replace the original `phone` directory:***
+**_If you skip the above section, we provide a pre-trained DeepSDF network. Please download the [files](https://drive.google.com/file/d/1g9TsQo0VPAafQPgNgDHVE3Py5XZMEh0B/view?usp=sharing), unzip them and replace the original `phone` directory:_**
 
 ```shell
 sdf
